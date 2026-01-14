@@ -6,47 +6,85 @@ import { useRouter } from "next/navigation";
 
 export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const router = useRouter();
 
-const [loading, setLoading] = useState(false);
-const [error, setError] = useState("");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
-  setError("");
+    try {
+      const res = await api.post("/auth/login", form);
+      setToken(res.data.token);
 
-  try {
-    const res = await api.post("/auth/login", form);
-    setToken(res.data.token);
+      if (res.data.role === "admin") router.push("/admin");
+      else router.push("/dashboard");
+    } catch {
+      setError("Invalid email or password");
+    }
 
-    if (res.data.role === "admin") router.push("/admin");
-    else router.push("/dashboard");
-
-  } catch (err) {
-    setError("Invalid credentials");
-  }
-
-  setLoading(false);
-};
-
+    setLoading(false);
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow w-80 space-y-4">
-        <h2 className="text-xl font-bold text-center">Login</h2>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white p-8 rounded-xl shadow-md w-full max-w-sm space-y-5"
+      >
+        <h2 className="text-2xl font-bold text-center mb-2">Login</h2>
+        <p className="text-center text-gray-500 text-sm mb-4">
+          Sign in to your account
+        </p>
 
-        <input placeholder="Email" className="w-full border p-2"
-          onChange={(e)=>setForm({...form,email:e.target.value})} />
+        <div>
+          <label className="block text-sm font-medium mb-1">
+            Email Address
+          </label>
+          <input
+            type="email"
+            className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value={form.email}
+            onChange={(e) =>
+              setForm({ ...form, email: e.target.value })
+            }
+            required
+          />
+        </div>
 
-        <input type="password" placeholder="Password" className="w-full border p-2"
-          onChange={(e)=>setForm({...form,password:e.target.value})} />
+        <div>
+          <label className="block text-sm font-medium mb-1">
+            Password
+          </label>
+          <input
+            type="password"
+            className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value={form.password}
+            onChange={(e) =>
+              setForm({ ...form, password: e.target.value })
+            }
+            required
+          />
+        </div>
 
-        <button disabled={loading} className="...">
-{loading ? "Logging in..." : "Login"}
-</button>
+        <button
+          type="submit"
+          disabled={loading}
+          className={`w-full py-2 rounded text-white font-medium transition
+            ${loading ? "bg-blue-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700 cursor-pointer"}
+          `}
+        >
+          {loading ? "Logging in..." : "Login"}
+        </button>
 
-        {error && <p className="text-red-500 text-sm">{error}</p>}
+        {/* Error */}
+        {error && (
+          <p className="text-red-500 text-sm text-center mt-2">
+            {error}
+          </p>
+        )}
       </form>
     </div>
   );

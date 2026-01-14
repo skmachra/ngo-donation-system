@@ -5,34 +5,58 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.get("/admin/stats").then(res => setStats(res.data));
+    api.get("/admin/stats")
+      .then(res => setStats(res.data))
+      .finally(() => setLoading(false));
   }, []);
 
   return (
     <ProtectedRoute>
-      <div className="p-6 bg-gray-100 min-h-screen">
-        <h1 className="text-2xl font-bold mb-6">Admin Dashboard</h1>
+      <div className="min-h-screen bg-gray-100 p-6">
+        <div className="max-w-6xl mx-auto">
 
-        {stats && (
-          <div className="grid grid-cols-3 gap-4">
-            <div className="bg-white p-4 rounded shadow">
-              <p>Total Users</p>
-              <h2 className="text-xl font-bold">{stats.totalUsers}</h2>
-            </div>
+          <h1 className="text-3xl font-bold mb-1">Admin Dashboard</h1>
+          <p className="text-gray-600 mb-6">
+            Overview of registrations and donations.
+          </p>
 
-            <div className="bg-white p-4 rounded shadow">
-              <p>Total Donations</p>
-              <h2 className="text-xl font-bold">₹{stats.totalDonations}</h2>
+          {loading && (
+            <div className="bg-white p-6 rounded shadow text-center">
+              Loading statistics...
             </div>
+          )}
 
-            <div className="bg-white p-4 rounded shadow">
-              <p>Pending Payments</p>
-              <h2 className="text-xl font-bold">{stats.pendingCount}</h2>
+          {stats && (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+              <div className="bg-white p-6 rounded-xl shadow">
+                <p className="text-sm text-gray-500 mb-1">Total Registrations</p>
+                <h2 className="text-3xl font-bold text-blue-600">
+                  {stats.totalUsers}
+                </h2>
+              </div>
+
+              <div className="bg-white p-6 rounded-xl shadow">
+                <p className="text-sm text-gray-500 mb-1">Total Donations Received</p>
+                <h2 className="text-3xl font-bold text-green-600">
+                  ₹{stats.totalDonations}
+                </h2>
+              </div>
+
+              <div className="bg-white p-6 rounded-xl shadow">
+                <p className="text-sm text-gray-500 mb-1">Pending Payments</p>
+                <h2 className="text-3xl font-bold text-yellow-600">
+                  {stats.pendingCount}
+                </h2>
+              </div>
+
             </div>
-          </div>
-        )}
+          )}
+
+        </div>
       </div>
     </ProtectedRoute>
   );
