@@ -1,14 +1,21 @@
 "use client";
 import { useState } from "react";
 import api from "@/services/api";
-import { useRouter } from "next/navigation";
+import { getRole, isLoggedIn } from "@/utils/auth";
 
 export default function Register() {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const router = useRouter();
 
+  if(isLoggedIn()) {
+    const role = getRole();
+    if(role === "admin") {
+      window.location.href = "/admin";
+    } else {
+      window.location.href = "/dashboard";
+    }
+  }
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);

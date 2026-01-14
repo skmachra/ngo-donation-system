@@ -1,14 +1,21 @@
 "use client";
 import { useState } from "react";
 import api from "@/services/api";
-import { setToken } from "@/utils/auth";
-import { useRouter } from "next/navigation";
+import { isLoggedIn, setRole, setToken, getRole } from "@/utils/auth";
 
 export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const router = useRouter();
+
+  if (isLoggedIn()) {
+    const role = getRole();
+    if (role === "admin") {
+      window.location.href = "/admin";
+    } else {
+      window.location.href = "/dashboard";
+    }
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,6 +25,7 @@ export default function Login() {
     try {
       const res = await api.post("/auth/login", form);
       setToken(res.data.token);
+      setRole(res.data.role);
 
       if (res.data.role === "admin") router.push("/admin");
       else router.push("/dashboard");

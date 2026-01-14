@@ -1,7 +1,16 @@
 "use client";
+import { getRole, isLoggedIn } from "@/utils/auth";
 import Link from "next/link";
 
 export default function Home() {
+  if(isLoggedIn()) {
+    const role = getRole();
+    if(role === "admin") {
+      window.location.href = "/admin";
+    } else {
+      window.location.href = "/dashboard";
+    }
+  }
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
 
