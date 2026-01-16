@@ -69,3 +69,17 @@ exports.verifyPayment = async (req, res) => {
     res.status(500).json({ msg: "Verification failed" });
   }
 };
+
+exports.markFailed = async (req, res) => {
+  try {
+    const { donationId } = req.body;
+
+    await Donation.findByIdAndUpdate(donationId, {
+      status: "failed"
+    });
+
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ msg: "Failed to update status" });
+  }
+};

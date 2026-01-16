@@ -41,12 +41,18 @@ export default function Donate() {
           });
 
           alert("Payment successful. Thank you for your support!");
+          setAmount("");
         },
 
         modal: {
-          ondismiss: function () {
-            alert("Payment cancelled.");
-          }
+            ondismiss: async function () {
+              try {
+                await api.post("/payments/mark-failed", { donationId });
+              } catch (err) {
+                    console.error("Failed to update status");
+              }
+              alert("Payment cancelled");
+            }
         },
 
         theme: {
