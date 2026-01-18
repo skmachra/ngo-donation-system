@@ -13,7 +13,7 @@ exports.getUsers = async (req, res) => {
   }
 
   const users = await User.find(filter).select("-password");
-  res.json(users);
+  res.status(200).json(users);
 };
 
 exports.getDonations = async (req, res) => {
@@ -26,7 +26,7 @@ exports.getDonations = async (req, res) => {
     .populate("userId", "name email")
     .sort({ createdAt: -1 });
 
-  res.json(donations);
+  res.status(200).json(donations);
 };
 
 exports.getStats = async (req, res) => {
@@ -38,7 +38,7 @@ exports.getStats = async (req, res) => {
 
   const pendingCount = await Donation.countDocuments({ status: "pending" });
 
-  res.json({
+  res.status(200).json({
     totalUsers,
     totalDonations: totalSuccess[0]?.sum || 0,
     pendingCount

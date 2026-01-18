@@ -22,10 +22,11 @@ export default function Register() {
     setError("");
 
     try {
-      await api.post("/auth/register", form);
-      router.push("/login");
-    } catch {
-      setError("Registration failed. Email may already exist.");
+      const res = await api.post("/auth/register", form);
+      window.location.href = "/login";
+    } catch (err) {
+      setError(err.response?.data?.message || "Registration failed. Please try again.");
+      console.error("Registration error:", err);
     }
 
     setLoading(false);

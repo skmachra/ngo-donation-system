@@ -18,7 +18,7 @@ exports.register = async (req, res) => {
       role: role || "user"
     });
 
-    res.json({ msg: "Registered successfully" });
+    res.status(201).json({ msg: "Registered successfully" });
 
   } catch (err) {
     res.status(500).json({ msg: "Server error" });
@@ -41,7 +41,7 @@ exports.login = async (req, res) => {
       { expiresIn: "1d" }
     );
 
-    res.json({
+    res.status(200).json({
       token,
       role: user.role
     });

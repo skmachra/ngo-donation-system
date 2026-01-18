@@ -32,7 +32,7 @@ exports.createDonation = async (req, res) => {
       razorpayOrderId: order.id
     });
 
-    res.json({ orderId: order.id, donationId: donation._id });
+    res.status(200).json({ orderId: order.id, donationId: donation._id });
 
   } catch (err) {
     console.error("Create donation error:", err);
@@ -43,7 +43,7 @@ exports.createDonation = async (req, res) => {
 exports.getUserDonations = async (req, res) => {
   try {
     const donations = await Donation.find({ userId: req.user.id }).sort({ createdAt: -1 });
-    res.json(donations);
+    res.status(200).json(donations);
   } catch (err) {
     res.status(500).json({ msg: "Failed to fetch donations" });
   }

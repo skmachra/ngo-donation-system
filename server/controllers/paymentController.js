@@ -23,7 +23,7 @@ exports.createOrder = async (req, res) => {
       razorpayOrderId: order.id
     });
 
-    res.json({
+    res.status(200).json({
       orderId: order.id,
       donationId: donation._id,
       key: process.env.RAZORPAY_KEY_ID
@@ -58,7 +58,7 @@ exports.verifyPayment = async (req, res) => {
         razorpaySignature: razorpay_signature
       });
 
-      return res.json({ success: true });
+      return res.status(200).json({ success: true });
     } else {
       await Donation.findByIdAndUpdate(donationId, { status: "failed" });
       return res.status(400).json({ success: false });
@@ -78,7 +78,7 @@ exports.markFailed = async (req, res) => {
       status: "failed"
     });
 
-    res.json({ success: true });
+    res.status(200).json({ success: true });
   } catch (err) {
     res.status(500).json({ msg: "Failed to update status" });
   }
