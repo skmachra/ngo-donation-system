@@ -16,7 +16,7 @@ const app = express();
 connectDB();
 app.use(helmet());
 app.use(cors({
-  origin: "http://localhost:3000",
+  origin: "https://ngo-donation-system-2yw8.onrender.com",
   credentials: true
 }));
 app.use(express.json());
