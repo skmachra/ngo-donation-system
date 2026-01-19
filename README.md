@@ -161,7 +161,16 @@ ngo-donation-system/
 └── README.md
 ```
 
+## Deployment URLs
+
+### Frontend
+[https://ngo-donation-system-mu.vercel.app/](https://ngo-donation-system-mu.vercel.app/)
+
+### Backend
+[https://ngo-donation-system-2yw8.onrender.com/](https://ngo-donation-system-2yw8.onrender.com/)
+
 ---
+
 
 ## Setup Instructions
 
